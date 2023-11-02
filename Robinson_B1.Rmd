@@ -10,3 +10,6 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 
 
+###Excercise 1: Building a Function
+
+In my thesis data, I have several categories of repeatedly sampled field observations. For example, I recorded canopy density at the same 50 locations every week over the course of 4 months. For one of my thesis chapters, I am spatial differences in forest structure, and am not really interested in the week to week change in data, as much as the site to site differences. For this chapter I need to average the data for each location across each observation period (i.e. I average all 12 observations of canopy cover at fixed point = A from Jan to Apr to get a seasonal average of canopy cover for point A). I will perform this operation on several different variables at various sample sizes and with varying observation amounts, but with the same grouping structure. **In this project, I will make a function consisting of the dplyr commands necessary to group and summarize repeated measure data at different sample sizes and different observation scales.**
