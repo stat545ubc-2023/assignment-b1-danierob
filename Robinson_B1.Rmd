@@ -16,7 +16,7 @@ library(testthat)
 library(palmerpenguins)
 ```
 
-###Excercise 1: Building a Function
+### Excercise 1 and 2: Building a Function and Documenting Function with roxygen
 
 In my thesis data, I have several categories of repeatedly sampled field observations. For example, I recorded canopy density at the same 50 locations every week over the course of 4 months. For one of my thesis chapters, I assess spatial differences in forest structure, and am not really interested in the week to week change in data, as much as the site to site differences. For this chapter I need to average the data for each location across each observation period (i.e. I average all 12 observations of canopy cover at fixed point = A from Jan to Apr to get a seasonal average of canopy cover for point A). I will perform this operation on several different variables at various sample sizes and with varying observation amounts, but with the same grouping structure. **In this project, I will make a function consisting of the dplyr commands necessary to group and summarize repeated measure data at different sample sizes and different observation scales.**
 
@@ -40,6 +40,8 @@ avg_obs <- function(data, group_var, measure_var, na.rm = TRUE, ...) { #added na
 }
 
 ```
+
+### Excercise 3: Examples from Mock Dataframes and Penguins Dataset
 
 We will run a few examples with simple mock dataframes to check the function by eye.
 
@@ -74,13 +76,14 @@ head(penguins)
 
 #Island and species are good candidates for out grouping variable and bill_depth_mm or any of the numeric variables can be averaged:
 result <- avg_obs(penguins, species, bill_length_mm)
+result
 ```
-
+### Excercise 4: Formally Testing the Function
 
 The function looks like its working okay with the mock tests, but now we will write formal tests for the function using expect_() family of functions and test_that() from the testthat package.
 
-```{r formally testing the function with expect_()}
-test_that("data input and output classes are correct", {
+```{r testthat input and output classes}
+test_that("Data input and output classes are correct", {
   # Sample dataframe from above
   penguins
 
@@ -95,11 +98,11 @@ test_that("data input and output classes are correct", {
   
 ```
 
-Now we will run a test to make sure out mean values are making sense given out original data.
+Now we will run a test to make sure our mean values are making sense given out original data.
 
-```{r testthat}
+```{r testthat numeric output logic}
 #Use expect_equal to test that the number of rows matches number of species and test that the mean values of the result make sense given the values from the original data 
-test_that("output makes sense numerically", {
+test_that("Output makes sense numerically", {
   expect_equal(nrow(result), n_distinct(penguins$species))  # Expect the number of rows in the result to match the number of species
   for (species_group in unique(penguins$species)) {   # Creating loop to check that mean_value of result is less than the maximum value for each group
     max_value_group <- max(penguins$bill_length_mm[penguins$species == species_group], na.rm = TRUE)
@@ -111,7 +114,7 @@ test_that("output makes sense numerically", {
 
 Lastly, we will run an easy test just to makes sure there are no NAs in mean_value data
 
-```{r testthat}
+```{r testthat NAs}
 test_that("No NAs in mean_value", {
   expect_false(anyNA(result$mean_value))
 })
